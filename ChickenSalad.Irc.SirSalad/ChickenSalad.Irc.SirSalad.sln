@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChickenSalad.Irc.SirSalad", "ChickenSalad.Irc.SirSalad.csproj", "{C06431AB-889A-4130-B3CE-E4E47C08992C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChickenSalad.IRC.SirSalad", "ChickenSalad.IRC.SirSalad.csproj", "{C06431AB-889A-4130-B3CE-E4E47C08992C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

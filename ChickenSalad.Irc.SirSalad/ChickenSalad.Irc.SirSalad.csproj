@@ -7,8 +7,8 @@
     <ProjectGuid>{C06431AB-889A-4130-B3CE-E4E47C08992C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ChickenSalad.Irc.SirSalad</RootNamespace>
-    <AssemblyName>ChickenSalad.Irc.SirSalad</AssemblyName>
+    <RootNamespace>ChickenSalad.IRC.SirSalad</RootNamespace>
+    <AssemblyName>ChickenSalad.IRC.SirSalad</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IRCBot.cs" />
+    <Compile Include="IRCCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
