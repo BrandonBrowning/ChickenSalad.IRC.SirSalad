@@ -60,7 +60,16 @@ namespace ChickenSalad.IRC.SirSalad
                 if (command.Command == "PRIVMSG" && command.Trail.StartsWith(roslynString))
                 {
                     string code = command.Trail.Substring(roslynString.Length).Trim();
-                    string response = roslyn.ExecuteCode(code);
+                    string response = "";
+
+                    if (code.ToLower().Contains("reflection") || code.ToLower().Contains("diagnostics") || code.ToLower().Contains("thread"))
+                    {
+                        response = "That looks scary...";
+                    }
+                    else
+                    {
+                        response = roslyn.ExecuteCode(code);
+                    }
 
                     if (!String.IsNullOrEmpty(response))
                     {

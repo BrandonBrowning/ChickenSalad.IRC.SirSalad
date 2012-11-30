@@ -8,6 +8,11 @@ namespace ChickenSalad.IRC.Common
 {
     public static class IRCExtensions
     {
+        public static bool In<T>(this T item, params T[] items)
+        {
+            return items.Contains(item);
+        }
+
         public static IEnumerable<T> Unfold<T>(this T value, Func<T, Unfolder<T>> f)
         {
             var output = value;
