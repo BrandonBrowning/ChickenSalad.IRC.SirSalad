@@ -25,13 +25,11 @@ namespace ChickenSalad.IRC.SirSalad
         {
             ScriptEngine = new ScriptEngine();
 
+            // Anything in here, anyone (ie, jac) can run code from
             Assemblies = new[]
             {
                 typeof(Type).Assembly,
                 typeof(ICollection).Assembly,
-                typeof(ListDictionary).Assembly,
-                typeof(Console).Assembly,
-                typeof(ScriptEngine).Assembly,
                 typeof(IEnumerable<>).Assembly,
                 typeof(IQueryable).Assembly,
                 typeof(IRCExtensions).Assembly,

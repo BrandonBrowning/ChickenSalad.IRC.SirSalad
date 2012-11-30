@@ -62,7 +62,7 @@ namespace ChickenSalad.IRC.SirSalad
                     string code = command.Trail.Substring(roslynString.Length).Trim();
                     string response = "";
 
-                    if (code.ToLower().Contains("reflection") || code.ToLower().Contains("diagnostics") || code.ToLower().Contains("thread"))
+                    if (code.ToLower().Contains("reflection") || code.ToLower().Contains("diagnostics") || code.ToLower().Contains("thread") || code.ToLower().Contains(".io."))
                     {
                         response = "That looks scary...";
                     }
