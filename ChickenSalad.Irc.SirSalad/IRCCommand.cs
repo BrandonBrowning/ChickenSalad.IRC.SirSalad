@@ -9,12 +9,14 @@ namespace ChickenSalad.IRC.SirSalad
 {
     public class IRCCommand
     {
-        public string Body { get; private set; }
-        public string Number { get; private set; }
-        public string Raw { get; private set; }
-        public string Source { get; private set; }
+        public string Prefix { get; private set; }
+        public string Command { get; private set; }
+        public string Params { get; private set; }
+        public string Trail { get; private set; }
 
-        private static readonly string CommandFormat = @"^:(?<source>[^ ]+)(?<number> \d+)(?<body> .*)$";
+        public string Raw { get; private set; }
+
+        private static readonly string CommandFormat = @"^(:(?<prefix>\S+) )?(?<command>\S+)( (?!:)(?<params>.+?))?( :(?<trail>.+))?$";
         private static readonly Regex CommandRegex;
 
         static IRCCommand()
@@ -27,9 +29,10 @@ namespace ChickenSalad.IRC.SirSalad
             Raw = raw;
 
             var match = CommandRegex.Match(raw);
-            Source = match.Groups["source"].Value.Trim();
-            Body = match.Groups["body"].Value.Trim();
-            Number = match.Groups["number"].Value.Trim();
+            Prefix = match.Groups["prefix"].Value;
+            Command = match.Groups["command"].Value;
+            Params = match.Groups["params"].Value;
+            Trail = match.Groups["trail"].Value;
         }
     }
 }
