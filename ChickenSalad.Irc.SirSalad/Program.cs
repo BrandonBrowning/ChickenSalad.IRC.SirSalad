@@ -90,8 +90,16 @@ namespace ChickenSalad.IRC.SirSalad
 
                                         if (result != null)
                                         {
-output.WriteLine("PRIVMSG #uakroncs :{0}", result.ToString());
-                                            output.Flush();
+                                            var response = new StringBuilder();
+
+                                            response.AppendLine(JsonConvert.SerializeObject(result));
+
+                                            string responseText = response.ToString();
+                                            if (!String.IsNullOrEmpty(responseText))
+                                            {
+                                                output.WriteLine("PRIVMSG #uakroncs :{0}", responseText);
+                                                output.Flush();
+                                            }
                                         }
                                     }
                                     catch (Exception e)
