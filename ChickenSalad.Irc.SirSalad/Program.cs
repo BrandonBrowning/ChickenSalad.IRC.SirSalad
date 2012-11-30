@@ -12,109 +12,93 @@ using Newtonsoft.Json;
 using Roslyn;
 using Roslyn.Scripting;
 using Roslyn.Scripting.CSharp;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace ChickenSalad.IRC.SirSalad
 {
     class Program
     {
+        static TcpClient TcpClient { get; set; }
+        static NetworkStream NetworkStream { get; set; }
+        static StreamWriter Output { get; set; }
+        static StreamReader Input { get; set; }
+
+        static void BotLoop()
+        {
+            Output.WriteLine("USER SirSalad 0 * :Shitty Bot");
+            Output.Flush();
+
+            Output.WriteLine("NICK SirSalad");
+            Output.Flush();
+
+            var roslyn = new RoslynExecutor();
+
+            while (TcpClient.Connected)
+            {
+                string line = Input.ReadLine();
+
+                if (line == null)
+                {
+                    break;
+                }
+
+                var command = new IRCCommand(line);
+
+                if (command.Command == "PING")
+                {
+                    Output.WriteLine("PONG :" + command.Trail);
+                    Output.Flush();
+                }
+
+                if (command.Command == "001")
+                {
+                    Output.WriteLine("JOIN #uakroncs");
+                    Output.Flush();
+                }
+
+                string roslynString = "!roslyn> ";
+                if (command.Command == "PRIVMSG" && command.Trail.StartsWith(roslynString))
+                {
+                    string code = command.Trail.Substring(roslynString.Length).Trim();
+                    string response = roslyn.ExecuteCode(code);
+
+                    if (!String.IsNullOrEmpty(response))
+                    {
+                        int nameBangIndex = command.Prefix.IndexOf('!');
+                        Output.WriteLine("PRIVMSG #uakroncs :{0}: {1}", command.Prefix.Substring(0, nameBangIndex), response);
+                        Output.Flush();
+                    }
+                }
+
+                Console.WriteLine(JsonConvert.SerializeObject(command, Formatting.Indented));
+            }
+        }
+
         static void Main()
         {
-            using (var tcpClient = new TcpClient("abstract.slashnet.org", 6667))
+            using (TcpClient = new TcpClient("abstract.slashnet.org", 6667))
             {
-                using (var networkStream = tcpClient.GetStream())
+                using (NetworkStream = TcpClient.GetStream())
                 {
-                    using (var output = new StreamWriter(networkStream))
+                    using (Output = new StreamWriter(NetworkStream))
                     {
-                        using (var input = new StreamReader(networkStream))
+                        using (Input = new StreamReader(NetworkStream))
                         {
-                            output.WriteLine("USER SirSalad 0 * :Shitty Bot");
-                            output.Flush();
-
-                            output.WriteLine("NICK SirSalad");
-                            output.Flush();
-
-                            var engine = new ScriptEngine();
-
-                            while (tcpClient.Connected)
+                            try
                             {
-                                string line = input.ReadLine();
-
-                                if (line == null)
-                                {
-                                    break;
-                                }
-
-                                var command = new IRCCommand(line);
-
-                                if (command.Command == "PING")
-                                {
-                                    output.WriteLine("PONG :" + command.Trail);
-                                    output.Flush();
-                                }
-
-                                if (command.Command == "001")
-                                {
-                                    output.WriteLine("JOIN #uakroncs");
-                                    output.Flush();
-                                }
-
-                                string roslynString = "!roslyn> ";
-                                if (command.Command == "PRIVMSG" && command.Trail.StartsWith(roslynString))
-                                {
-                                    string code = command.Trail.Substring(roslynString.Length).Trim();
-
-                                    new[]
-                                    {
-                                        typeof (Type).Assembly,
-                                        typeof (ICollection).Assembly,
-                                        typeof (ListDictionary).Assembly,
-                                        typeof (Console).Assembly,
-                                        typeof (ScriptEngine).Assembly,
-                                        typeof (IEnumerable<>).Assembly,
-                                        typeof (IQueryable).Assembly
-                                    }.ToList().ForEach(asm => engine.AddReference(asm));
-
-                                    var session = engine.CreateSession();
-
-                                    new string[]
-                                    {
-                                        "System",
-                                        "System.Collections",
-                                        "System.Collections.Generic",
-                                        "System.Linq",
-                                    }.ToList().ForEach(str => session.ImportNamespace(str));
-
-                                    try
-                                    {
-                                        var result = session.Execute(code);
-
-                                        if (result != null)
-                                        {
-                                            var response = new StringBuilder();
-
-                                            response.AppendLine(JsonConvert.SerializeObject(result));
-
-                                            string responseText = response.ToString();
-                                            if (!String.IsNullOrEmpty(responseText))
-                                            {
-                                                output.WriteLine("PRIVMSG #uakroncs :{0}", responseText);
-                                                output.Flush();
-                                            }
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        output.WriteLine("PRIVMSG #uakroncs :{0}", e.Message);
-                                        output.Flush();
-                                    }
-                                }
-
-                                Console.WriteLine(JsonConvert.SerializeObject(command, Formatting.Indented));
+                                BotLoop();
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message + Environment.NewLine + e.StackTrace);
+                                Output.WriteLine("QUIT");
                             }
                         }
                     }
                 }
             }
+
+            Console.ReadLine();
         }
     }
 }
