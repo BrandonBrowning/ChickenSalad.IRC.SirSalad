@@ -130,6 +130,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChickenSalad.IRC.Common\ChickenSalad.IRC.Common.csproj">
+      <Project>{810b30bb-aa7a-4f67-b77f-0a041445e527}</Project>
+      <Name>ChickenSalad.IRC.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

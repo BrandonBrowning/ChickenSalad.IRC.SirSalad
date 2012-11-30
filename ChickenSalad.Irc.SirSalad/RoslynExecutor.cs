@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ChickenSalad.IRC.Common;
 using Lokad.Threading;
 using Newtonsoft.Json;
 using Roslyn.Scripting;
@@ -26,13 +27,14 @@ namespace ChickenSalad.IRC.SirSalad
 
             Assemblies = new[]
             {
-                typeof (Type).Assembly,
-                typeof (ICollection).Assembly,
-                typeof (ListDictionary).Assembly,
-                typeof (Console).Assembly,
-                typeof (ScriptEngine).Assembly,
-                typeof (IEnumerable<>).Assembly,
-                typeof (IQueryable).Assembly
+                typeof(Type).Assembly,
+                typeof(ICollection).Assembly,
+                typeof(ListDictionary).Assembly,
+                typeof(Console).Assembly,
+                typeof(ScriptEngine).Assembly,
+                typeof(IEnumerable<>).Assembly,
+                typeof(IQueryable).Assembly,
+                typeof(IRCExtensions).Assembly,
             };
 
             Namespaces = new string[]
@@ -41,6 +43,7 @@ namespace ChickenSalad.IRC.SirSalad
                 "System.Collections",
                 "System.Collections.Generic",
                 "System.Linq",
+                "ChickenSalad.IRC.Common",
             };
 
             foreach (var assembly in Assemblies)
